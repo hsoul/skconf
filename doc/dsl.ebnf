@@ -1,0 +1,93 @@
+(* =============================================================================
+   DSL语法定义 / DSL Syntax Definition
+   版本 / Version: 1.0
+   描述 / Description: 定义了一个用于技能和状态描述的领域特定语言 / Defines a domain-specific language for skills and states description
+   ============================================================================= *)
+
+(* 程序结构 / Program Structure *)
+Program = ImportList Definitions ;
+ImportList = { ImportStatement } ;
+Definitions = { Definition } ;
+
+(* Import语句 / Import Statement *)
+ImportStatement = "import" Identifier ;
+
+(* 顶层定义 / Top-level Definition *)
+Definition = SkillDef | StateDef ;
+
+(* 技能定义 / Skill Definition *)
+SkillDef = "skill" SkillName Block ;
+SkillName = QualifiedIdentifier ;
+Block = "{" [ Properties ] "}" ;
+Properties = Property { "," Property } ;
+Property = PropertyDef ;
+
+(* 状态定义 / State Definition *)
+StateDef = "state" Identifier Block ;
+
+(* 属性定义 / Property Definition *)
+PropertyDef = Identifier "=" Value ;
+Value = Literal | TableDef | EnumRef | FunctionDef ;
+Literal = Number | String | Boolean ;
+
+(* 表定义 / Table Definition *)
+TableDef = "{" [ TableEntries ] "}" ;
+TableEntries = TableEntry { "," TableEntry } ;
+TableEntry = PropertyDef | (Identifier "=" Value) ;
+
+(* 方法定义 / func Definition *)
+FunctionDef = "func" "(" [ Parameters ] ")" CodeBlock ;
+Parameters = Parameter { "," Parameter } ;
+Parameter = Identifier ;
+
+(* 代码块和语句 / Code Block and Statements *)
+CodeBlock = "{" { Statement } "}" ;
+Statement = IfStmt | ReturnStmt | ExprStmt | Comment ;
+
+IfStmt = "if" Expression CodeBlock 
+         { "else" "if" Expression CodeBlock }  (* 0或多个 else if *)
+         [ "else" CodeBlock ] ;               (* 可选的 else *)
+ReturnStmt = "return" [ Expression ] ;
+ExprStmt = Expression ;
+Comment = "--" { NonNewline } LineEnd ;
+
+(* 表达式 / Expressions *)
+Expression = LogicalExpr ;
+LogicalExpr = ComparisonExpr { LogicalOp ComparisonExpr } ;
+ComparisonExpr = SimpleExpr [ ComparisonOp SimpleExpr ] ;
+SimpleExpr = Term { AddOp Term } ;
+Term = Factor { MulOp Factor } ;
+Factor = Literal
+       | "(" Expression ")"
+       | "not" Factor
+       | FunctionCall
+       | QualifiedIdentifier ;
+
+(* 函数调用 / Function Call *)
+FunctionCall = QualifiedIdentifier "(" [ Arguments ] ")" ;
+Arguments = Expression { "," Expression } ;
+QualifiedIdentifier = Identifier [ "." Identifier ] ;
+
+(* 基本类型 / Basic Types *)
+Number = Integer | Float ;
+Integer = [ "-" ] Digit { Digit } ;
+Float = Integer "." Digit { Digit } ;
+Boolean = "true" | "false" ;
+String = '"' { StringChar } '"' ;
+
+(* 运算符 / Operators *)
+LogicalOp = "and" | "or" ;
+ComparisonOp = "<" | ">" | "<=" | ">=" | "==" | "!=" ;
+AddOp = "+" | "-" ;
+MulOp = "*" | "/" ;
+
+(* 标识符和基本字符 / Identifiers and Basic Characters *)
+Identifier = Letter { Letter | Digit | "_" | "-" } ;
+Letter = "A" | ... | "Z" | "a" | ... | "z" ;
+Digit = "0" | ... | "9" ;
+StringChar = Letter | Digit | SpecialChar ;
+SpecialChar = "!" | "@" | "#" | "$" | "%" | "^" | "&" | "*" | "(" | ")" | ... ;
+
+(* 辅助定义 / Auxiliary Definitions *)
+LineEnd = "\n" | "\r" | "\r\n" ;
+NonNewline = Letter | Digit | SpecialChar | " " | "\t" ;

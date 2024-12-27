@@ -1,0 +1,21 @@
+└── Program { Imports: 0, Statements: 1 }
+    └── statement: *ast.VarStatement
+        ├── var: Identifier { Value: s1 }
+        └── exp: *ast.TableDef
+            ├── property 'sd': *ast.TableDef
+            │   ├── property : DotExpression
+            │   │   ├── left: Identifier { Value: EM }
+            │   │   └── right: Identifier { Value: Test }
+            │   └── property : *ast.TableDef
+            │       └── property : Integer { Value: 1 }
+            ├── property 'tid': Integer { Value: 1 }
+            ├── property 'name': String { Value: 测试 }
+            └── property 'ss': *ast.TableDef
+                ├── property '1': *ast.TableDef
+                │   ├── property : Integer { Value: 1 }
+                │   ├── property : Integer { Value: 2 }
+                │   └── property : Integer { Value: 3 }
+                └── property '5': *ast.TableDef
+                    ├── property : Integer { Value: 1 }
+                    ├── property : Integer { Value: 5 }
+                    └── property : Integer { Value: 4 }
