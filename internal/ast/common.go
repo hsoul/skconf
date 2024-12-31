@@ -5,3 +5,8 @@ type PropertyDef struct {
 	Key   Expression
 	Value Expression
 }
+
+type CodeBlock struct {
+	BaseNode
+	Statements []Statement
+}

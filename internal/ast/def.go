@@ -1,10 +1,5 @@
 package ast
 
-type Block struct {
-	BaseNode
-	Statements []Statement
-}
-
 type SkillDef struct {
 	BaseNode
 	Name       *Identifier

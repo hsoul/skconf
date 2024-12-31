@@ -91,7 +91,7 @@ func nodeToString(node Node) string {
 	case *PrefixExpression:
 		return fmt.Sprintf("PrefixExpression")
 	case *ExprStmt:
-		return "ExpressionStatement"
+		return "ExprStmt"
 	case *DotExpression:
 		return "DotExpression"
 	case *FunctionCall:
@@ -154,12 +154,12 @@ func getChildren(node Node) []Node {
 	case *IfStatement:
 		if n.Consequence != nil {
 			ifCondition := &labeledNode{"if", &labeledNode{"condition", n.Condition}}
-			compositionNode := &compositionNode{node: make([]Node, 0)}
-			compositionNode.node = append(compositionNode.node, ifCondition, n.Consequence)
+			compositionNode := &compositionNode{nodes: make([]Node, 0)}
+			compositionNode.nodes = append(compositionNode.nodes, ifCondition, n.Consequence)
 			children = append(children, compositionNode)
 		} else {
-			compositionNode := &compositionNode{node: make([]Node, 0)}
-			compositionNode.node = append(compositionNode.node, &labeledNode{"if", &labeledNode{"condition", n.Condition}})
+			compositionNode := &compositionNode{nodes: make([]Node, 0)}
+			compositionNode.nodes = append(compositionNode.nodes, &labeledNode{"if", &labeledNode{"condition", n.Condition}})
 			children = append(children, compositionNode)
 		}
 		for _, alt := range n.Alternatives {
@@ -177,8 +177,12 @@ func getChildren(node Node) []Node {
 		}
 	case *FunctionCall:
 		children = append(children, &labeledNode{"function", n.Function})
+		compositionNode := &compositionNode{nodes: make([]Node, 0)}
 		for i, arg := range n.Arguments {
-			children = append(children, &labeledNode{fmt.Sprintf("arg[%d]", i), arg})
+			compositionNode.nodes = append(compositionNode.nodes, &labeledNode{fmt.Sprintf("arg[%d]", i), arg})
+		}
+		if len(compositionNode.nodes) > 0 {
+			children = append(children, compositionNode)
 		}
 	case *DotExpression:
 		children = append(children, &labeledNode{"left", n.Left})
@@ -229,7 +233,7 @@ func getChildren(node Node) []Node {
 	case *labeledNode:
 		children = append(children, n.node)
 	case *compositionNode:
-		for _, child := range n.node {
+		for _, child := range n.nodes {
 			children = append(children, child)
 		}
 	}
@@ -251,5 +255,5 @@ func (n *labeledNode) String() string {
 
 type compositionNode struct {
 	BaseNode
-	node []Node
+	nodes []Node
 }

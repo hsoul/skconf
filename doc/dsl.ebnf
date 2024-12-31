@@ -27,13 +27,13 @@ StateDef = "state" Identifier Block ;
 
 (* 属性定义 / Property Definition *)
 PropertyDef = Identifier "=" Value ;
-Value = Literal | TableDef | EnumRef | FunctionDef ;
+Value = Literal | TableDef | FunctionDef ;
 Literal = Number | String | Boolean ;
 
 (* 表定义 / Table Definition *)
 TableDef = "{" [ TableEntries ] "}" ;
 TableEntries = TableEntry { "," TableEntry } ;
-TableEntry = PropertyDef | (Identifier "=" Value) ;
+TableEntry = PropertyDef;
 
 (* 方法定义 / func Definition *)
 FunctionDef = "func" "(" [ Parameters ] ")" CodeBlock ;

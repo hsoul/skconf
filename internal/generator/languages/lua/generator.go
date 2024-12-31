@@ -104,7 +104,7 @@ func (l *luaGenerator) generateProgram(program *ast.Program) {
 
 func isBlockStatement(stmt ast.Statement) bool {
 	switch stmt.(type) {
-	case *ast.SkillDef, *ast.StateDef, *ast.TableDef:
+	case *ast.SkillDef, *ast.StateDef:
 		return true
 	default:
 		return false

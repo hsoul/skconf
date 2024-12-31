@@ -7,14 +7,6 @@ type Node interface {
 	String() string
 }
 
-type Statement interface {
-	Node
-}
-
-type Expression interface {
-	Node
-}
-
 type BaseNode struct {
 	Token lexer.Token
 }

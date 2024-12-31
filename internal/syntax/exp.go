@@ -143,9 +143,9 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 	leftExp := prefix()
 
 	for !p.peekTokenIs(lexer.SEMICOLON) &&
+		!p.peekTokenIs(lexer.LBRACE) &&
 		!p.peekTokenIs(lexer.RBRACE) &&
 		!p.peekTokenIs(lexer.RPAREN) &&
-		!p.peekTokenIs(lexer.LBRACE) &&
 		precedence < p.peekPrecedence() {
 
 		infix := p.infixParseFns[p.peekToken.Type]

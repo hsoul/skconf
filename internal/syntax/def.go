@@ -58,19 +58,22 @@ func (p *Parser) parseSkillDefinition() *ast.SkillDef {
 					}
 				} else {
 					method := p.parseFunction()
-					if _, ok := method.(*ast.FunctionDef); !ok {
+					fn, ok := method.(*ast.FunctionDef)
+					if !ok {
 						return nil
 					}
 					if method != nil {
-						skill.Properties = append(skill.Properties, &ast.PropertyDef{
-							Key: &ast.Identifier{
-								BaseNode: ast.BaseNode{
-									Token: identifier,
-								},
-								Value: name,
+						key := &ast.Identifier{
+							BaseNode: ast.BaseNode{
+								Token: identifier,
 							},
+							Value: name,
+						}
+						skill.Properties = append(skill.Properties, &ast.PropertyDef{
+							Key:   key,
 							Value: method,
 						})
+						fn.Name = key
 					}
 				}
 			}
@@ -151,19 +154,22 @@ func (p *Parser) parseStateDefinition() *ast.StateDef {
 					}
 				} else {
 					method := p.parseFunction()
-					if _, ok := method.(*ast.FunctionDef); !ok {
+					fn, ok := method.(*ast.FunctionDef)
+					if !ok {
 						return nil
 					}
 					if method != nil {
-						state.Properties = append(state.Properties, &ast.PropertyDef{
-							Key: &ast.Identifier{
-								BaseNode: ast.BaseNode{
-									Token: identifier,
-								},
-								Value: name,
+						key := &ast.Identifier{
+							BaseNode: ast.BaseNode{
+								Token: identifier,
 							},
+							Value: name,
+						}
+						state.Properties = append(state.Properties, &ast.PropertyDef{
+							Key:   key,
 							Value: method,
 						})
+						fn.Name = key
 					}
 				}
 			}

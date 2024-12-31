@@ -200,17 +200,17 @@ func (p *Parser) parseImportStatement() *ast.ImportStatement {
 	return stmt
 }
 
-func (p *Parser) parseIfStatement() ast.Expression {
+func (p *Parser) parseIfStatement() ast.Statement {
 	if !p.curTokenIs(lexer.IF) {
 		return nil
 	}
+	p.nextToken() // consume 'if'
 
 	stmt := &ast.IfStatement{
 		BaseNode:     ast.BaseNode{Token: p.curToken},
 		Alternatives: []*ast.ElseStatement{},
 	}
 
-	p.nextToken()
 	stmt.Condition = p.parseExpression(LOWEST)
 
 	if !p.expectPeek(lexer.LBRACE) {

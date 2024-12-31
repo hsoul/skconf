@@ -54,8 +54,8 @@ func (p *Parser) parseTable() ast.Expression {
 			if !p.expectPeek(lexer.ASSIGN) {
 				return nil
 			}
+			p.nextToken() // consume '='
 
-			p.nextToken()
 			value := p.parseExpression(LOWEST)
 			if value == nil {
 				return nil
